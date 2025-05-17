@@ -117,7 +117,7 @@ class CompassViewModel: ObservableObject {
             speechUtteranceManager.speak(text: text)
         }
     }
-    
+
     func appendLocationActiveParking() {
         if let record = firstParkingRecord {
             options.append(Location(id:6 , name: "Parking Location", label: "Parking Location", coordinate: CLLocationCoordinate2D(latitude: record.latitude, longitude: record.longitude)))
@@ -131,6 +131,7 @@ class CompassViewModel: ObservableObject {
     
     var formattedDistance: (String, Int) {
         let distance = navigationManager.distance(to: targetDestination)
+//        print("Distance: \(distance)")
         if distance > 999 {
             return (String(format: "%.2f km", distance / 1000), Int(distance))
         } else {
@@ -170,22 +171,33 @@ class CompassViewModel: ObservableObject {
 struct CompassView: View {
     @Binding var isCompassOpen: Bool
     @Binding var isComplete: Bool
+    
     var selectedLocation: Int
     var longitude: Double
     var latitude: Double
 
     @StateObject var navigationManager = NavigationManager()
     
-    @StateObject var compassVM: CompassViewModel = CompassViewModel(
-        isCompassOpen: false,
-        isComplete: false,
-        selectedLocation: 1,
-        longitude: 0.0,
-        latitude: 0.0,
-        previousAngle: 0.0,
-        displayedAngle: 0.0,
-        parkingRecords: []
-    )
+    @StateObject var compassVM: CompassViewModel
+    
+    init(isCompassOpen: Binding<Bool>, isComplete: Binding<Bool>, selectedLocation: Int, longitude: Double, latitude: Double, firstParkingRecord: ParkingRecord? = nil) {
+        self._isCompassOpen = isCompassOpen
+        self._isComplete = isComplete
+        self.selectedLocation = selectedLocation
+        self.longitude = longitude
+        self.latitude = latitude
+        self.firstParkingRecord = firstParkingRecord
+        self._compassVM = StateObject(wrappedValue: CompassViewModel(
+            isCompassOpen: false,
+            isComplete: false,
+            selectedLocation: selectedLocation,
+            longitude: longitude,
+            latitude: latitude,
+            previousAngle: 0.0,
+            displayedAngle: 0.0,
+            parkingRecords: []
+        ))
+    }
     
     @Environment(\.modelContext) var context
     
@@ -261,7 +273,7 @@ struct CompassView: View {
                         .padding(.bottom, 10)
                 } else {
                     
-                        Text(compassVM.options[selectedLocation-1].name)
+                    Text(compassVM.options.first(where: {$0.id == selectedLocation})?.name ?? "kosong")
                             .font(.title)
                             .foregroundColor(.black)
                             .fontWeight(.bold)
@@ -311,9 +323,6 @@ struct CompassView: View {
                     .frame(height: 40)
 
                 Button {
-                    //compassVM.isComplete.toggle()
-//                    compassVM.complete(context: context)
-                    
                     if firstParkingRecord != nil {
                         complete()
                     } else  {

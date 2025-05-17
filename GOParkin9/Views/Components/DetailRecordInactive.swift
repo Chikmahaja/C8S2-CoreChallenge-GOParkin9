@@ -16,10 +16,11 @@ extension CLLocationCoordinate2D: @retroactive Equatable {
 }
  
 struct DetailRecordInactive: View {
+    @Binding var hasTakenRecord: Bool
     
     @State private var showAlertSaveLocation: Bool = false
     @State private var showingSheet: Bool = false
-    @State private var hasTakenRecord = false
+    //@State private var hasTakenRecord = false
     
     let locationManager = NavigationManager()
     @State private var savedLocation: CLLocationCoordinate2D?
@@ -81,6 +82,9 @@ struct DetailRecordInactive: View {
             if newValue != nil {
                 showingSheet = true
             }
+        }
+        .onAppear {
+            hasTakenRecord = false
         }
         
     }

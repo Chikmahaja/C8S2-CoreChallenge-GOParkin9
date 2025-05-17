@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct ContentView: View {
-    //@StateObject var navigationManager = NavigationManager()
 
     var body: some View {
         VStack {
@@ -23,7 +22,7 @@ struct ContentView: View {
                        Label("History", systemImage: "clock")
                    }
             }
-            .tint(.secondary1)
+            //.tint(.secondary1)
         }
         .ignoresSafeArea(.keyboard)
         .environment(\.sizeCategory, .large)

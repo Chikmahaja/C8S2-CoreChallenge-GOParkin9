@@ -9,13 +9,13 @@ import SwiftUI
 import SwiftData
 
 struct DetailRecord: View {
-    //@ObservedObject var viewModel: NavigationViewModel
     
     @State private var selectedImageIndex = 0
     @State private var isPreviewOpen = false
     @State var isCompassOpen: Bool = false
     
     @State var isComplete: Bool = false
+    @Binding var hasTakenRecord: Bool
 
     @Query(filter: #Predicate<ParkingRecord>{p in p.isHistory == false}) var parkingRecords: [ParkingRecord]
 
@@ -26,30 +26,25 @@ struct DetailRecord: View {
     @Query var parkingRecordss: [ParkingRecord]
     @Environment(\.modelContext) var context
     
-    func complete() {
-        firstParkingRecord?.isHistory.toggle()
-        firstParkingRecord?.completedAt = Date.now
-        try? context.save()
-        print("Complete")
+    func finishNavigation() {
+        hasTakenRecord = false
     }
     
     var body: some View {
         VStack(alignment: .leading) {
             Section {
-//                Text(String(describing: parkingRecordss))
-                
                 if let record = firstParkingRecord {
                     DetailRecordActive(
                         isPreviewOpen: $isPreviewOpen,
                         isCompassOpen: $isCompassOpen,
                         selectedImageIndex: $selectedImageIndex,
+                        hasTakenRecord: $hasTakenRecord,
                         dateTime: record.createdAt,
                         parkingRecord: record,
                         isComplete: $isComplete
-                        
                     )
                 } else {
-                    DetailRecordInactive()
+                    DetailRecordInactive( hasTakenRecord: $hasTakenRecord)
                 }
 
             } header: {
@@ -90,9 +85,16 @@ struct DetailRecord: View {
                         longitude: record.longitude,
                         latitude: record.latitude,
                         firstParkingRecord: firstParkingRecord
-//                        context: context
                     )
                 }
+            }
+        }
+        .onAppear {
+            if firstParkingRecord != nil{
+                hasTakenRecord = true
+            }
+            else {
+                hasTakenRecord = false
             }
         }
     }

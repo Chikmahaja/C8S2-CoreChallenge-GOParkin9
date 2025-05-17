@@ -26,9 +26,9 @@ struct NavigationListModalView: View {
     @Binding var isCompassOpen: Bool
     @Binding var isComplete: Bool
     @Binding var isPresented: Bool
-
+    
     @State private var sortMode: SortMode = .default
-
+    
     var navigationOptions: [Options] = [
         Options(id: 1, name: "Entry Gate Basement 1", image: Image("nav-EntryGateB1"), coordinate: CLLocationCoordinate2D(latitude: -6.302254, longitude: 106.652554)),
         Options(id: 2, name: "Exit Gate Basement 1", image: Image("nav-ExitGateB1"), coordinate: CLLocationCoordinate2D(latitude: -6.302244, longitude: 106.652582)),
@@ -36,7 +36,7 @@ struct NavigationListModalView: View {
         Options(id: 4, name: "Entry Gate Basement 2", image: Image("nav-EntryGateB2"), coordinate: CLLocationCoordinate2D(latitude: -6.301891, longitude: 106.652777)),
         Options(id: 5, name: "Exit Gate Basement 2", image: Image("nav-ExitGateB2"), coordinate: CLLocationCoordinate2D(latitude: -6.301597, longitude: 106.652761))
     ]
-
+    
     var sortedOptions: [Options] {
         switch sortMode {
         case .default:
@@ -47,7 +47,7 @@ struct NavigationListModalView: View {
             }
         }
     }
-
+    
     func distanceText(for destination: CLLocationCoordinate2D) -> String {
         let distance = navigationManager.distance(to: destination)
         if distance == 0 {
@@ -58,68 +58,72 @@ struct NavigationListModalView: View {
             return "\(Int(distance)) m"
         }
     }
-
+    
     var body: some View {
-        VStack(spacing: 0) {
-
-            // Cancel + Sort
-            HStack {
-                Button("Close") {
-                    isPresented = false
-                }
-                .foregroundColor(.red)
-                .font(.callout)
-
-                Spacer()
-
-                Menu {
-                    Button { sortMode = .default } label: { Text("Default") }
-                    Button { sortMode = .nearest } label: { Text("Nearest") }
-                } label: {
-                    HStack(spacing: 4) {
-                        Text(sortMode.rawValue)
-                            .font(.callout)
-                            .foregroundColor(.secondary)
-                        Image(systemName: "arrow.up.arrow.down")
-                            .font(.callout)
-                            .padding(.leading, 4)
-                    }
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 6)
-                }
-            }
-            .padding(.horizontal)
-            .padding(.vertical, 10)
-            .background(Color(UIColor.secondarySystemBackground))
-
-            List(sortedOptions) { nav in
-                NavigationLink(destination: CompassView(
-                    isCompassOpen: $isCompassOpen,
-                    isComplete: $isComplete,
-                    selectedLocation: nav.id,
-                    longitude: nav.coordinate.longitude,
-                    latitude: nav.coordinate.latitude
-                )) {
-                    HStack(alignment: .top, spacing: 15) {
-                        nav.image
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: 80, height: 60)
-                            .cornerRadius(8)
-                            .clipped()
-
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text(nav.name)
-                                .font(.body)
-                                .fontWeight(.bold)
-                                .padding(.vertical, 2)
-                            Text(distanceText(for: nav.coordinate))
-                                .font(.footnote)
-                                .foregroundColor(.secondary)
+        NavigationStack {
+            VStack(spacing: 0) {
+                HStack {
+                    Menu {
+                        Button { sortMode = .default } label: { Text("Default") }
+                        Button { sortMode = .nearest } label: { Text("Nearest") }
+                    } label: {
+                        HStack(spacing: 4) {
+                            Image(systemName: "arrow.up.arrow.down")
+                                .font(.callout)
+                                .padding(.trailing, 4)
+                            Text(sortMode.rawValue)
+                                .font(.callout)
+                                .foregroundColor(.blue)
                         }
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 6)
                     }
-                    .padding(.vertical, 5)
-                    .padding(.horizontal, -5)
+                    
+                    Spacer()
+                    
+                    Button("Close") {
+                        isPresented = false
+                    }
+                    .foregroundColor(.red)
+                    .font(.callout)
+                    
+                }
+                .padding(.horizontal)
+                .padding(.top, 30)
+                .padding(.bottom, -5)
+                .background(Color(UIColor.tertiarySystemGroupedBackground))
+                
+                List(sortedOptions) { nav in
+                    NavigationLink {
+                        CompassView(
+                            isCompassOpen: $isCompassOpen,
+                            isComplete: $isComplete,
+                            selectedLocation: nav.id,
+                            longitude: nav.coordinate.longitude,
+                            latitude: nav.coordinate.latitude
+                        )
+                    } label: {
+                        HStack(alignment: .top, spacing: 15) {
+                            nav.image
+                                .resizable()
+                                .scaledToFill()
+                                .frame(width: 80, height: 60)
+                                .cornerRadius(8)
+                                .clipped()
+                            
+                            VStack(alignment: .leading, spacing: 8) {
+                                Text(nav.name)
+                                    .font(.body)
+                                    .fontWeight(.bold)
+                                    .padding(.vertical, 2)
+                                Text(distanceText(for: nav.coordinate))
+                                    .font(.footnote)
+                                    .foregroundColor(.secondary)
+                            }
+                        }
+                        .padding(.vertical, 5)
+                        .padding(.horizontal, -5)
+                    }
                 }
             }
             .listStyle(InsetGroupedListStyle())

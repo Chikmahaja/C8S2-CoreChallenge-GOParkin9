@@ -119,8 +119,7 @@ struct HistoryView: View {
                             },
                             isSelecting: isSelecting,
                             isSelected: selectedParkingRecords.contains(entry.id),
-                            toggleSelection: { toggleSelection(entry) }
-                            //viewModel: viewModel
+                            toggleSelection: { toggleSelection(entry)}
                         )
                     }
 
@@ -280,7 +279,7 @@ struct HistoryComponent: View {
     let isSelecting: Bool
     let isSelected: Bool
     let toggleSelection: () -> Void
-    
+
     @Environment(\.modelContext) var context
     
     var body: some View {

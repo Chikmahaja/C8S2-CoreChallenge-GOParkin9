@@ -16,11 +16,11 @@ struct HomeView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
                         if hasTakenRecord {
-                            DetailRecord()
+                            DetailRecord(hasTakenRecord: $hasTakenRecord)
                             NavigationList()
                         } else {
                             NavigationList()
-                            DetailRecord()
+                            DetailRecord(hasTakenRecord: $hasTakenRecord)
                         }
                     }
                 .navigationTitle("GOParkin9")

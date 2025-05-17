@@ -29,6 +29,7 @@ struct ModalView: View {
 
     func addParkingRecord(latitude: Double, longitude: Double, images: [UIImage], floor:String) {
         let convertedImages = images.map { ParkingImage(image: $0) }
+        //print("latitude:\(latitude), longitude:\(longitude)") ngacoooo
         
         let record = ParkingRecord(
             latitude: latitude,

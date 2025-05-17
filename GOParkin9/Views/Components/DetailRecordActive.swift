@@ -12,6 +12,8 @@ struct DetailRecordActive: View {
     @Binding var isPreviewOpen: Bool
     @Binding var isCompassOpen: Bool
     @Binding var selectedImageIndex: Int
+    @Binding var hasTakenRecord: Bool
+    
     @State var dateTime: Date
     @State var parkingRecord: ParkingRecord
     @Environment(\.modelContext) var context

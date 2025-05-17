@@ -103,7 +103,7 @@ extension NavigationManager {
     
     func distance(to destination: CLLocationCoordinate2D) -> Double {
         guard let from = self.location?.coordinate else { return 0.0 }
-//        print(from)
+        //print("from:\(from)") anggaplah ini gpsnya ngaco
                 
         let lat1 = from.latitude.toRadians()
         let lon1 = from.longitude.toRadians()

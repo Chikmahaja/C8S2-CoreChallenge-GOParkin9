@@ -109,12 +109,12 @@ struct NavigationList: View {
                     HStack {
                         Text("\(navigations.count) locations")
                             .font(.footnote)
-                            .foregroundStyle(.primary)
+                            .foregroundStyle(.black)
                         
                         Spacer()
                         
                         Image(systemName: "chevron.right")
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(.gray)
                             .frame(width: 60, height: 45, alignment: .trailing)
                     }
                     //.background(.yellow)

@@ -14,6 +14,7 @@ struct DetailHistoryView: View {
     @State var isPreviewOpen: Bool = false
     @State var selectedImageIndex: Int = 0
     @State var isCompassOpen: Bool = false
+
     @Environment(\.dismiss) var dismiss
     
     @State var isDeleteConfirmationAlertOpen: Bool = false
