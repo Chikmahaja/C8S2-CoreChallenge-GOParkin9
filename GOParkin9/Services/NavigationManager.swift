@@ -122,7 +122,4 @@ extension NavigationManager {
         return earthRadius * c * 1000 // Jarak dalam meter
     }
     
-//    func getLongitude() -> Double {
-//        return Double(self.location.coordinate.latitude ?? 0.0)
-//    }
 }

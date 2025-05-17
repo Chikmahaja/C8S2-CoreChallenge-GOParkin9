@@ -57,6 +57,7 @@ struct NavigationList: View {
     @State var isCompassOpen: Bool = false
     @State var showCompassView: Bool = false
     @State var selectedNavigation: Int = 0
+    @State private var isModalPresented = false
 
     let navigations: [NavigationButton] = [
         NavigationButton(id:1, name: "Entry Gate Basement 1", image: Image("nav-EntryGateB1")),
@@ -102,20 +103,24 @@ struct NavigationList: View {
                     .frame(height: 0.5)
                     .padding(.horizontal, 10)
 
-                HStack {
-                    Text("\(navigations.count) locations")
-                        .font(.footnote)
-                        .foregroundStyle(.primary)
-
-                    Spacer()
-
-                    Image(systemName: "chevron.right")
-                        .foregroundStyle(.secondary)
-                        .frame(width: 60, height: 45, alignment: .trailing)
+                Button {
+                    isModalPresented = true
+                } label: {
+                    HStack {
+                        Text("\(navigations.count) locations")
+                            .font(.footnote)
+                            .foregroundStyle(.primary)
+                        
+                        Spacer()
+                        
+                        Image(systemName: "chevron.right")
+                            .foregroundStyle(.secondary)
+                            .frame(width: 60, height: 45, alignment: .trailing)
+                    }
+                    //.background(.yellow)
+                    .padding(.horizontal, 15)
+                    .padding(.bottom, 1)
                 }
-                //.background(.yellow)
-                .padding(.horizontal, 15)
-                .padding(.bottom, 1)
             }
             .background(
                 RoundedRectangle(cornerRadius: 16)
@@ -135,6 +140,17 @@ struct NavigationList: View {
                 longitude: 0,
                 latitude: 0
             )
+        }
+        .sheet(isPresented: $isModalPresented) {
+            NavigationListModalView(
+                selectedLocation: selectedNavigation,
+                isCompassOpen: $isCompassOpen,
+                isComplete: $isCompassOpen,
+                isPresented: $isModalPresented // ← baru
+            )
+            .environmentObject(NavigationManager())
+            .presentationDetents([.large]) // Ukuran fleksibel
+            .interactiveDismissDisabled(false) // Bisa ditutup dengan drag
         }
     }
 }
