@@ -9,6 +9,8 @@ import SwiftUI
 import SwiftData
 
 struct DetailRecord: View {
+    //@ObservedObject var viewModel: NavigationViewModel
+    
     @State private var selectedImageIndex = 0
     @State private var isPreviewOpen = false
     @State var isCompassOpen: Bool = false
@@ -63,7 +65,7 @@ struct DetailRecord: View {
                             .fontWeight(.medium)
                             .foregroundColor(.secondary)
                     } else {
-                        Text("There's no record of your parking activity")
+                        Text("There’s no record of your parking activity. Save your parking location now!")
                             .font(.subheadline)
                             .fontWeight(.medium)
                             .foregroundColor(.secondary)
@@ -72,17 +74,10 @@ struct DetailRecord: View {
                 }
                 .padding(.vertical)
             }
-            .alertComponent(
-                isPresented: $isComplete,
-                title: "Complete this record?",
-                message: "This action will move the record to history and cannot be undone.",
-                confirmAction: complete,
-                confirmButtonText: "Complete",
-                confirmButtonRole: .destructive
-            )
+
             .fullScreenCover(isPresented: $isPreviewOpen) {
                 if let image = firstParkingRecord?.images[selectedImageIndex].getImage() {
-                    ImagePreviewView(imageName: image, isPresented: $isPreviewOpen)
+                    ImagePreviewView(imageName: [image], selectedIndex: $selectedImageIndex, isPresented: $isPreviewOpen)
                 }
             }
             .fullScreenCover(isPresented: $isCompassOpen) {
@@ -90,9 +85,12 @@ struct DetailRecord: View {
                 if let record = firstParkingRecord {
                     CompassView(
                         isCompassOpen: $isCompassOpen,
+                        isComplete: $isCompassOpen,
                         selectedLocation: 6,
                         longitude: record.longitude,
-                        latitude: record.latitude
+                        latitude: record.latitude,
+                        firstParkingRecord: firstParkingRecord
+//                        context: context
                     )
                 }
             }

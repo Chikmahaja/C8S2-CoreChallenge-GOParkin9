@@ -20,25 +20,19 @@ struct DetailHistoryView: View {
     
     @Environment(\.modelContext) var context
     
-    // This function belongs to delete button
-    private func deleteItem(_ entry: ParkingRecord) {
-        withAnimation {
-            context.delete(entry)
-            try? context.save()
-        }
-
-    }
-    
     // This function belongs to pin button
-    private func pinItem(_ entry: ParkingRecord) {
+    func pinItem(_ entry: ParkingRecord) {
         withAnimation {
             entry.isPinned.toggle()
             try? context.save()
         }
     }
     
-    @State private var selectedHistoryToBeDeleted: ParkingRecord?
-    @State private var selectedHistoryToBePinned: ParkingRecord?
+    @State var selectedHistoryToBeDeleted: ParkingRecord?
+    @State var selectedHistoryToBePinned: ParkingRecord?
+    
+    @State var isImageFullscreen = false
+    @State var imageName: [UIImage]
     
     var body: some View {
         ScrollView {
@@ -60,7 +54,7 @@ struct DetailHistoryView: View {
                                 Image(uiImage: parkingRecord.images[index].getImage())
                                     .resizable()
                                     .scaledToFill()
-                                    .frame(maxHeight: 350)
+                                    .frame(maxHeight: 400)
                                     .clipped()
                                     .cornerRadius(10)
                                     .tag(index)
@@ -70,7 +64,8 @@ struct DetailHistoryView: View {
                             }
                         }
                         .tabViewStyle(PageTabViewStyle(indexDisplayMode: .automatic))
-                        .frame(height: 350)
+                        .frame(height: 400)
+                        
                     }
                 }
             }
@@ -172,122 +167,61 @@ struct DetailHistoryView: View {
             
                 // Button
                 Button {
-                    print("Navigate Back")
+                    print("Navigate")
                     isCompassOpen.toggle()
                 } label: {
                     HStack {
                         Image(systemName: "figure.walk")
                             .resizable()
+                            .fontWeight(.bold)
                             .scaledToFit()
                             .frame(height: 15)
                         
-                        Text("Navigate Back")
+                        Text("Navigate")
                             .font(.subheadline)
-                            .fontWeight(.medium)
+                            .fontWeight(.bold)
                     }
                     .frame(maxWidth: .infinity)
                     .padding()
-                    .background(Color.blue)
+                    .background(Color.secondary3)
                     .foregroundColor(.white)
                     .cornerRadius(10)
                 }
                 
-                Spacer()
-                    .frame(height: 15)
-            
-                HStack {
-                    Button(action: {
-                        selectedHistoryToBeDeleted = parkingRecord
-                        isDeleteConfirmationAlertOpen.toggle()
-                    }) {
-                        HStack {
-                            Image(systemName: "trash")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(height: 15)
-                            
-                            Text("Delete")
-                                .font(.subheadline)
-                                .fontWeight(.medium)
-                        }
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color.red)
-                        .foregroundColor(.white)
-                        .cornerRadius(10)
-                    }
-                    
-                    Spacer()
-                        .frame(width: 15)
-                    
-                    Button(action: {
-                        pinItem(parkingRecord)
-                        dismiss()
-                    }) {
-                        HStack {
-                            Image(systemName: parkingRecord.isPinned ? "pin.slash" : "pin")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(height: 15)
-                            
-                            Text(parkingRecord.isPinned ? "Unpin History" : "Pin History")
-                                .font(.subheadline)
-                                .fontWeight(.medium)
-                        }
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(Color.yellow)
-                        .foregroundColor(.white)
-                        .cornerRadius(10)
-                    }
-                }
             }
             .padding()
             .navigationTitle("\(parkingRecord.createdAt, format: .dateTime.day().month().year())")
             .navigationBarTitleDisplayMode(.inline)
-            .alertComponent(
-                isPresented: $isDeleteConfirmationAlertOpen,
-                title: "Delete This Record?",
-                message: "This action cannot be undone.",
-                confirmAction: {
-                    if let record = selectedHistoryToBeDeleted {
-                        deleteItem(record)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(action: {
+                        pinItem(parkingRecord)
                         dismiss()
+                    }) {
+                        Image(systemName: parkingRecord.isPinned ? "pin.slash" : "pin")
+                            .foregroundColor(.secondary1)
+                            .scaledToFit()
+                            .frame(height: 20)
                     }
-                },
-                confirmButtonText: "Delete",
-                confirmButtonRole: .destructive
-            )
-            .fullScreenCover(isPresented: $isPreviewOpen) {
-                
-                ImagePreviewView(
-                    imageName: parkingRecord.images[selectedImageIndex].getImage(),
-                    isPresented: $isPreviewOpen
-                )
-                
-            }
-            Spacer()
-                .fullScreenCover(isPresented: $isCompassOpen) {
-                    CompassView(
-                        isCompassOpen: $isCompassOpen,
-                        selectedLocation: 7,
-                        longitude: parkingRecord.longitude,
-                        latitude: parkingRecord.latitude
-                    )
-                    
                 }
+            }
+        
+            .fullScreenCover(isPresented: $isImageFullscreen) {
+                ImagePreviewView(
+                    imageName: imageName,
+                    selectedIndex: $selectedImageIndex,
+                    isPresented: $isImageFullscreen
+                )
+            }
+            .fullScreenCover(isPresented: $isCompassOpen) {
+                CompassView(
+                    isCompassOpen: $isCompassOpen,
+                    isComplete: $isCompassOpen,
+                    selectedLocation: 7,
+                    longitude: parkingRecord.longitude,
+                    latitude: parkingRecord.latitude
+                )
+            }
         }
     }
 
-
-//
-//struct HistoryDetailView: View {
-//    var body: some View {
-//        NavigationStack {
-//            NavigationLink("History Detail") {
-//                HistoryDetail()
-//            }
-//            .navigationTitle("History")
-//        }
-//    }
-//}

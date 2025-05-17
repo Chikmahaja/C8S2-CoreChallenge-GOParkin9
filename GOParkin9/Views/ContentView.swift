@@ -22,6 +22,7 @@ struct ContentView: View {
                        Label("History", systemImage: "clock")
                    }
             }
+            .tint(.secondary1)
         }
         .ignoresSafeArea(.keyboard)
         .environment(\.sizeCategory, .large)

@@ -10,28 +10,27 @@ import SwiftUI
 struct NavigationButton: Identifiable {
     let id: Int
     let name: String
-    let icon: String
+    let image: Image
 }
 
 struct NavigationButtonList: View {
+
     let navigations: [NavigationButton]
     @Binding var selectedNavigation: Int
     
     var body: some View {
-        HStack(alignment: .top, spacing: 30) {
+        HStack(alignment: .top, spacing: 20) {
             ForEach(navigations) { navigation in
                 Button {
                     selectedNavigation = navigation.id
                 } label: {
                     VStack {
-                        Image(systemName: navigation.icon)
+                        navigation.image
                             .resizable()
-                            .scaledToFit()
-                            .frame(width: 60, height: 40)
-                            .padding()
-                            .background(Color.gray.opacity(0.2))
+                            .scaledToFill()
+                            .frame(width: 80, height: 60)
                             .cornerRadius(10)
-                            .frame(width: 60, height: 60)
+                            .clipped()
 
                         Text(navigation.name)
                             .font(.caption)
@@ -57,55 +56,89 @@ struct NavigationList: View {
 
     @State var isCompassOpen: Bool = false
     @State var showCompassView: Bool = false
-    @State var selectedNavigation:Int = 0
+    @State var selectedNavigation: Int = 0
 
-    let navigations = [
-        NavigationButton(id:1, name: "Entry Gate Basement 1", icon: "pedestrian.gate.open"),
-        NavigationButton(id:2, name: "Exit Gate Basement 1", icon: "pedestrian.gate.closed"),
-        NavigationButton(id:3, name: "Charging Station", icon: "bolt.car"),
-        NavigationButton(id:4, name: "Entry Gate Basement 2", icon: "pedestrian.gate.open"),
-        NavigationButton(id:5, name: "Exit Gate Basement 2", icon: "pedestrian.gate.closed"),
+    let navigations: [NavigationButton] = [
+        NavigationButton(id:1, name: "Entry Gate Basement 1", image: Image("nav-EntryGateB1")),
+        NavigationButton(id:2, name: "Exit Gate Basement 1", image: Image("nav-ExitGateB1")),
+        NavigationButton(id:3, name: "Charging Station", image: Image("nav-ChargingStation")),
+        NavigationButton(id:4, name: "Entry Gate Basement 2", image: Image("nav-EntryGateB2")),
+        NavigationButton(id:5, name: "Exit Gate Basement 2", image: Image("nav-ExitGateB2")),
     ]
+    
+    @Environment(\.modelContext) var context
     
     var body: some View {
         VStack(alignment: .leading) {
-            Section(header:
-                VStack(alignment: .leading) {
-                    Text("Navigate Around")
-                        .font(.title3)
-                        .fontWeight(.bold)
-                        .foregroundColor(.primary)
-                    
-                    Text("Where do you want to go?")
-                        .font(.subheadline)
-                        .fontWeight(.medium)
-                        .foregroundColor(.secondary)
-                }
-            ) {
-             
+
+            // Header
+            VStack(alignment: .leading) {
+                Text("Navigate Around")
+                    .font(.title3)
+                    .fontWeight(.bold)
+                    .foregroundColor(.primary)
+
+                Text("Navigate to certain location around parking area")
+                    .font(.subheadline)
+                    .fontWeight(.medium)
+                    .foregroundColor(.secondary)
+            }
+
+            // Section with background
+            VStack(spacing: 0) {
                 ScrollView(.horizontal, showsIndicators: false) {
                     NavigationButtonList(
                         navigations: navigations,
                         selectedNavigation: $selectedNavigation
                     )
                 }
-                .frame(maxWidth: .infinity, alignment: .topLeading)
-                .onChange(of: selectedNavigation) {
-                    isCompassOpen.toggle()
-                    showCompassView = true
+                .padding(.horizontal, 10)
+                
+                Spacer()
+                    .frame(height: 12)
+
+                Rectangle()
+                    .foregroundColor(.secondary)
+                    .frame(height: 0.5)
+                    .padding(.horizontal, 10)
+
+                HStack {
+                    Text("\(navigations.count) locations")
+                        .font(.footnote)
+                        .foregroundStyle(.primary)
+
+                    Spacer()
+
+                    Image(systemName: "chevron.right")
+                        .foregroundStyle(.secondary)
+                        .frame(width: 60, height: 45, alignment: .trailing)
                 }
-                .fullScreenCover(isPresented: $isCompassOpen) {
-                        CompassView(
-                            isCompassOpen: $isCompassOpen,
-                            selectedLocation: selectedNavigation,
-                            longitude: 0,
-                            latitude: 0
-                        )
-                }
+                //.background(.yellow)
+                .padding(.horizontal, 15)
+                .padding(.bottom, 1)
             }
+            .background(
+                RoundedRectangle(cornerRadius: 16)
+                    .fill(Color(.systemGray6))
+            )
+
+        }
+        .onChange(of: selectedNavigation) {
+            isCompassOpen.toggle()
+            showCompassView = true
+        }
+        .fullScreenCover(isPresented: $isCompassOpen) {
+            CompassView(
+                isCompassOpen: $isCompassOpen,
+                isComplete: $isCompassOpen,
+                selectedLocation: selectedNavigation,
+                longitude: 0,
+                latitude: 0
+            )
         }
     }
 }
+
 
 #Preview {
     ContentView()

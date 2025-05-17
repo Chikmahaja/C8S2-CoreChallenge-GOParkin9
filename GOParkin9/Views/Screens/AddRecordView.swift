@@ -20,6 +20,7 @@ struct ModalView: View {
     @State private var selectedImage: UIImage?
     @State private var selectedFloor: String? = nil
     @State private var floors = ["Basement 1", "Basement 2"]
+    var onRecordSaved: (() -> Void)? = nil
     let dateTime = Date.now
 
     let savedLocation:CLLocationCoordinate2D
@@ -51,7 +52,8 @@ struct ModalView: View {
     @Query var parkingRecords: [ParkingRecord]
     
     @State private var images: [UIImage] = [] // State untuk menyimpan gambar
-
+    
+    @State var selectedImageIndex: Int = 0
     var body: some View {
         VStack(alignment: .leading) {
             HStack {
@@ -68,6 +70,7 @@ struct ModalView: View {
                             images: images,
                             floor: selected
                         )
+                        onRecordSaved?()
                         dismiss()
                     } else {
                         showingAlertSave.toggle()
@@ -75,13 +78,10 @@ struct ModalView: View {
                     
                 } label: {
                     Text("Done")
+                        .fontWeight(.semibold)
+                        .foregroundColor(selectedFloor == nil ? .gray : .blue)
                 }
-                .alert("Floor haven't selected", isPresented: $showingAlertSave) {
-                    Button("OK") {
-                    }
-                } message: {
-                    Text("Please select a floor where you parked your vehicle.")
-                }
+                .disabled(selectedFloor == nil)
             }
             .padding()
             
@@ -125,7 +125,7 @@ struct ModalView: View {
             )
         ) {
             if let selectedImage = selectedImage {
-                ImagePreviewView(imageName: selectedImage, isPresented: $isImageFullscreen)
+                ImagePreviewView(imageName: images, selectedIndex: $selectedImageIndex, isPresented: $isImageFullscreen)
             } else {
                 Text("Image not found").foregroundColor(.white)
             }
@@ -137,10 +137,11 @@ struct ModalView: View {
 struct ImagePreviewWrapper: View {
     var selectedImage: UIImage?
     @Binding var isPresented: Bool
+    @State var selectedImageIndex: Int = 0
     
     var body: some View {
         if let selectedImage {
-            ImagePreviewView(imageName: selectedImage, isPresented: $isPresented)
+            ImagePreviewView(imageName: [selectedImage], selectedIndex: $selectedImageIndex, isPresented: $isPresented)
         } else {
             Text("Image not found").foregroundColor(.white)
         }

@@ -12,7 +12,7 @@ struct WelcomeScreenView: View {
     
     var body: some View {
         ZStack {
-            Color.white.ignoresSafeArea()
+            Color.background.ignoresSafeArea()
 
             VStack(spacing: 30) {
                 // Welcome Text
@@ -96,5 +96,3 @@ struct FeatureCircleView: View {
 #Preview {
     WelcomeScreenView()
 }
-
-//gatau ini bakal works engga pas pertama kali buka

@@ -11,6 +11,7 @@ import SwiftData
 
 
 struct HistoryView: View {
+    //@ObservedObject var viewModel: NavigationViewModel
 
     @AppStorage("deleteHistoryAfterInDay") var deleteHistoryAfterInDay: Int = 5
 
@@ -63,11 +64,12 @@ struct HistoryView: View {
                 
                 if !pinnedParkingRecords.isEmpty {
                     HStack {
-                        Image(systemName: "pin")
+                        Image(systemName: "pin.fill")
                             .resizable()
                             .scaledToFit()
                             .frame(width: 20, height: 20)
                             .padding(.trailing, 10)
+                            .foregroundColor(.secondary1)
                         
                         
                         Text("Pinned")
@@ -86,8 +88,8 @@ struct HistoryView: View {
                             },
                             isSelecting: isSelecting,
                             isSelected: selectedParkingRecords.contains(entry.id),
-                            toggleSelection: { toggleSelection(entry) }
-                        )
+                            toggleSelection: { toggleSelection(entry) })
+                            //viewModel: viewModel
                     }
                 }
                 
@@ -98,6 +100,7 @@ struct HistoryView: View {
                             .scaledToFit()
                             .frame(width: 20, height: 20)
                             .padding(.trailing, 10)
+                            .foregroundColor(.secondary1)
                         
                         
                         Text("All History")
@@ -117,6 +120,7 @@ struct HistoryView: View {
                             isSelecting: isSelecting,
                             isSelected: selectedParkingRecords.contains(entry.id),
                             toggleSelection: { toggleSelection(entry) }
+                            //viewModel: viewModel
                         )
                     }
 
@@ -277,10 +281,14 @@ struct HistoryComponent: View {
     let isSelected: Bool
     let toggleSelection: () -> Void
     
+    @Environment(\.modelContext) var context
+    
     var body: some View {
         NavigationLink(destination: DetailHistoryView(
-            parkingRecord: entry
-        )) {
+                parkingRecord: entry,
+                imageName: []
+        ).environment(\.modelContext, context))
+        {
             HStack {
                 
                 if isSelecting {
@@ -333,10 +341,6 @@ struct HistoryComponent: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
                     }
                 }
-                
-                if entry.isPinned {
-                    Image(systemName: "pin.fill")
-                        .foregroundColor(.yellow)
                 }
             }
             .padding(.vertical, 10)
@@ -355,7 +359,7 @@ struct HistoryComponent: View {
                         Label("Pin", systemImage: "pin")
                     }
                 }
-                .tint(.yellow)
+                .tint(.secondary1)
                 
                 Button {
                     deleteItem()
@@ -367,7 +371,7 @@ struct HistoryComponent: View {
         }
 
     }
-}
+
 
 #Preview {
     ContentView()

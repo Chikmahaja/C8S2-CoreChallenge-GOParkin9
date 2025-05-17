@@ -9,28 +9,24 @@ import SwiftUI
 
 struct HomeView: View {
     @State private var showAlert = true
+    @State private var hasTakenRecord = false
     
     var body: some View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
-
-                    NavigationList()
-
-                    DetailRecord()
-
-                }
+                        if hasTakenRecord {
+                            DetailRecord()
+                            NavigationList()
+                        } else {
+                            NavigationList()
+                            DetailRecord()
+                        }
+                    }
                 .navigationTitle("GOParkin9")
                 .padding()
             }
         }
-        .alertComponent(
-            isPresented: $showAlert,
-            title: "Thanks for trying GOParkin9!",
-            message: "Due to Core Location accuracy limits, the navigation feature will detect you as \"arrived\" when your device is within 5 meters of your parked vehicle.",
-            hideCancelButton: true,
-            confirmButtonText: "Got it"
-        )
             
     }
 }
