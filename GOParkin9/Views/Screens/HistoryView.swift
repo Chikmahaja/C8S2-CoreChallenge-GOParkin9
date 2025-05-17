@@ -333,9 +333,6 @@ struct HistoryComponent: View {
                         
                         HStack {
                             Image(systemName: "arrow.up.forward.circle")
-                            //                    if entry.completedAt.description.isEmpty {
-                            //                        Text(entry.createdAt, format: .dateTime.hour().minute())
-                            //                    } else {
                             Text(entry.completedAt, format: .dateTime.hour().minute())
                         }
                         .frame(maxWidth: .infinity, alignment: .leading)
