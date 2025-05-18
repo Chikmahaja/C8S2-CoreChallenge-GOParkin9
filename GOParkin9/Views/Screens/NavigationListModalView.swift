@@ -158,26 +158,26 @@ struct NavigationListModalView: View {
     }
 }
 
-struct NavigationListModalView_Previews: PreviewProvider {
-    struct PreviewWrapper: View {
-        @State var isCompassOpen = false
-        @State var isComplete = false
-        @State var isPresented = true
-        @State var hasTakenRecord = false
-        
-        var body: some View {
-            NavigationListModalView(
-                selectedLocation: 1,
-                isCompassOpen: $isCompassOpen,
-                isComplete: $isComplete,
-                hasTakenRecord: $hasTakenRecord,
-                isPresented: $isPresented
-            )
-            .environmentObject(NavigationManager())
-        }
-    }
-
-    static var previews: some View {
-        PreviewWrapper()
-    }
-}
+//struct NavigationListModalView_Previews: PreviewProvider {
+//    struct PreviewWrapper: View {
+//        @State var isCompassOpen = false
+//        @State var isComplete = false
+//        @State var isPresented = true
+//        @State var hasTakenRecord = false
+//        
+//        var body: some View {
+//            NavigationListModalView(
+//                selectedLocation: 1,
+//                isCompassOpen: $isCompassOpen,
+//                isComplete: $isComplete,
+//                hasTakenRecord: $hasTakenRecord,
+//                isPresented: $isPresented
+//            )
+//            .environmentObject(NavigationManager())
+//        }
+//    }
+//
+//    static var previews: some View {
+//        PreviewWrapper()
+//    }
+//}
