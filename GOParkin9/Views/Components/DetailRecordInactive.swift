@@ -29,7 +29,7 @@ struct DetailRecordInactive: View {
         VStack(alignment: .center) {
             
             Spacer()
-                .frame(height: 35)
+                .frame(height: 30)
             
             Image(systemName: "parkingsign.radiowaves.left.and.right.slash")
                 .resizable()
@@ -39,7 +39,7 @@ struct DetailRecordInactive: View {
                 .opacity(0.6)
             
             Spacer()
-                .frame(height: 45)
+                .frame(height: 40)
             
             Button {
                 showAlertSaveLocation.toggle()
@@ -53,7 +53,7 @@ struct DetailRecordInactive: View {
                     
                     Text("Mark This Spot")
                         .font(.subheadline)
-                        .fontWeight(.medium)
+                        .fontWeight(.bold)
                 }
                 .padding()
                 .frame(maxWidth: .infinity)

@@ -61,7 +61,10 @@ struct ModalView: View {
                 Button("Cancel") {
                     dismiss()
                 }
+                .font(.callout)
+                
                 Spacer()
+                
                 Button {
                     if let selected = selectedFloor {
                         print("Button clicked")
@@ -79,6 +82,7 @@ struct ModalView: View {
                     
                 } label: {
                     Text("Done")
+                        .font(.callout)
                         .fontWeight(.semibold)
                         .foregroundColor(selectedFloor == nil ? .gray : .blue)
                 }
@@ -90,16 +94,23 @@ struct ModalView: View {
                     HStack {
                         Image(systemName: "mappin.and.ellipse")
                         Text("Location saved!")
-                    }.padding(.bottom)
+                    }
+                    .font(.body)
+                    .padding(.bottom)
+                
                     HStack {
                         Image(systemName: "calendar")
                         Text(dateTime, format: .dateTime.day().month().year())
-                    }.padding(.bottom)
+                    }
+                    .font(.body)
+                    .padding(.bottom)
                     
                     HStack {
                         Image(systemName: "clock")
                         Text(dateTime, format: .dateTime.hour().minute())
                     }
+                    .font(.body)
+                
                     HStack {
                         Image(systemName: "stairs")
                         Picker("On which floor is your vehicle parked?", selection: $selectedFloor) {
@@ -107,16 +118,22 @@ struct ModalView: View {
                             ForEach(floors, id: \.self) { floor in
                                 Text(floor).tag(floor as String?)
                             }
-                        }.pickerStyle(.menu)
+                        }
+                        .font(.body)
+                        .pickerStyle(.menu)
                     }
                 Text("Take up to 8 photos of your parking spot environment")
-                    .padding(.vertical)
+                
                 GridView(images: $images, onSelectImage: { img in
                     selectedImage = img
                     isImageFullscreen = true
                 }, isImageFullscreen: $isImageFullscreen)
+                
                 Spacer()
-            }.padding()
+            }
+            .font(.body)
+            .padding()
+    
             Spacer()
         }
         .fullScreenCover(
