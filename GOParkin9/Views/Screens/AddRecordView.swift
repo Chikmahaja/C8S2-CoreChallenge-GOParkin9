@@ -56,7 +56,7 @@ struct ModalView: View {
     
     @State var selectedImageIndex: Int = 0
     var body: some View {
-        VStack(alignment: .leading) {
+        VStack(alignment: .leading, spacing: 20) {
             HStack {
                 Button("Cancel") {
                     dismiss()

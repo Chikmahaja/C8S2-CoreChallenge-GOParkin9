@@ -50,6 +50,8 @@ struct DetailRecordInactive: View {
                         .resizable()
                         .scaledToFit()
                         .frame(height: 15)
+                        .fontWeight(.bold)
+                        .padding(.trailing, 5)
                     
                     Text("Mark This Spot")
                         .font(.subheadline)

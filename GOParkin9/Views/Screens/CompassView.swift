@@ -338,6 +338,7 @@ struct CompassView: View {
                             .fontWeight(.bold)
                             .scaledToFit()
                             .frame(height: 15)
+                            .padding(.trailing, 5)
                         
                         Text("Finish Navigation")
                             .font(.body)
