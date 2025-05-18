@@ -46,9 +46,11 @@ struct DetailRecordActive: View {
             }
             .tabViewStyle(PageTabViewStyle(indexDisplayMode: .automatic))
             .frame(height: 250)
+            .padding(.vertical, -10)
         }
+        
         Spacer()
-            .frame(height: 20)
+            .frame(height: 30)
         
         Grid {
             GridRow {
@@ -132,9 +134,10 @@ struct DetailRecordActive: View {
                         
                     }
                     
-                    Text("-")
-                        .font(.subheadline)
+                    Text("Available after navigation")
+                        .font(.caption)
                         .fontWeight(.medium)
+                        .foregroundStyle(Color.secondary)
                 }
             }.frame(maxWidth: .infinity, alignment: .leading)
             

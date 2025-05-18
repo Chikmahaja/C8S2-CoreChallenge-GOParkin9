@@ -200,7 +200,8 @@ struct DetailHistoryView: View {
                         dismiss()
                     }) {
                         Image(systemName: parkingRecord.isPinned ? "pin.slash" : "pin")
-                            .foregroundColor(.secondary1)
+                            .foregroundColor(.yellow)
+                            .fontWeight(.bold)
                             .scaledToFit()
                             .frame(height: 20)
                     }

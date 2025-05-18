@@ -56,6 +56,7 @@ struct NavigationList: View {
 
     @State var isCompassOpen: Bool = false
     @State var showCompassView: Bool = false
+    @State var hasTakenRecord: Bool = false
     @State var selectedNavigation: Int = 0
     @State private var isModalPresented = false
 
@@ -94,6 +95,7 @@ struct NavigationList: View {
                     )
                 }
                 .padding(.horizontal, 10)
+                .padding(.vertical, 5)
                 
                 Spacer()
                     .frame(height: 12)
@@ -109,22 +111,24 @@ struct NavigationList: View {
                     HStack {
                         Text("\(navigations.count) locations")
                             .font(.footnote)
-                            .foregroundStyle(.black)
+                            .foregroundStyle(Color.primary)
                         
                         Spacer()
                         
                         Image(systemName: "chevron.right")
+                            .font(.subheadline)
                             .foregroundStyle(.gray)
                             .frame(width: 60, height: 45, alignment: .trailing)
                     }
                     //.background(.yellow)
                     .padding(.horizontal, 15)
-                    .padding(.bottom, 1)
+                    .padding(.bottom, 7)
                 }
             }
             .background(
-                RoundedRectangle(cornerRadius: 16)
+                RoundedRectangle(cornerRadius: 15)
                     .fill(Color(.systemGray6))
+                    .padding(.vertical, 5)
             )
 
         }
@@ -146,11 +150,12 @@ struct NavigationList: View {
                 selectedLocation: selectedNavigation,
                 isCompassOpen: $isCompassOpen,
                 isComplete: $isCompassOpen,
+                hasTakenRecord: $hasTakenRecord,
                 isPresented: $isModalPresented // ← baru
             )
             .environmentObject(NavigationManager())
-            .presentationDetents([.large]) // Ukuran fleksibel
-            .interactiveDismissDisabled(false) // Bisa ditutup dengan drag
+            .presentationDetents([.height(600)])
+            .interactiveDismissDisabled(false)
         }
     }
 }

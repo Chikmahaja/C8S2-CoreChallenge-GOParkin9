@@ -8,18 +8,9 @@
 import SwiftUI
 
 struct CompassIndicatorView: View {
-    
-    @StateObject var navigationManager = NavigationManager()
-    @StateObject var compassVM = CompassViewModel(
-        isCompassOpen: false,
-        isComplete: false,
-        selectedLocation: 1,
-        longitude: 0.0,
-        latitude: 0.0,
-        previousAngle: 0.0,
-        displayedAngle: 0.0,
-        parkingRecords: []
-    )
+
+    @ObservedObject var navigationManager : NavigationManager
+    @ObservedObject var compassVM : CompassViewModel
     
     var body: some View {
         ZStack {
@@ -64,6 +55,6 @@ struct CompassIndicatorView: View {
     }
 }
 
-#Preview {
-    CompassIndicatorView()
-}
+//#Preview {
+//    CompassIndicatorView()
+//}

@@ -17,15 +17,17 @@ struct WelcomeScreenView: View {
             VStack(spacing: 30) {
                 // Welcome Text
                 Text("Welcome to")
-                    .foregroundStyle(Color.secondary1)
+                    .foregroundStyle(Color.main)
                     .font(.title)
                     .fontWeight(.bold)
+                    .padding(5)
 
                 // App Logo
                 Image("GOParkin9-logo")
                     .resizable()
                     .scaledToFit()
                     .frame(width: 150)
+                    .padding(5)
 
                 // App Name
                 Text("GOParkin9")
@@ -33,17 +35,20 @@ struct WelcomeScreenView: View {
                     .font(.largeTitle)
                     .fontWeight(.bold)
                     .padding(.top, -20)
+                    .padding(5)
 
                 // Tagline
                 Text("Your smart assistant to save and find your parking spot! Park with ease and speed ✨")
                     .multilineTextAlignment(.center)
                     .padding(.horizontal)
+                    .padding(5)
 
                 // Feature Icons Row
                 HStack(spacing: 30) {
                     FeatureCircleView(icon: "figure.walk", caption: "Navigate in parking area")
                     FeatureCircleView(icon: "mappin.and.ellipse", caption: "Save your location")
                     FeatureCircleView(icon: "car.fill", caption: "Find vehicle easily")
+                        .tint(Color.secondary1)
                 }
                 .padding()
 
@@ -52,11 +57,12 @@ struct WelcomeScreenView: View {
                     openWelcomeView = false
                 }) {
                     Text("Get Started")
-                        .font(.headline)
+                        .font(.subheadline)
+                        .fontWeight(.bold)
                         .foregroundColor(.white)
                         .padding()
-                        .frame(maxWidth: .infinity)
-                        .background(Color.green)
+                        .frame(maxWidth: .infinity, maxHeight: 48)
+                        .background(Color.secondary3)
                         .cornerRadius(10)
                 }
                 .padding(.horizontal)

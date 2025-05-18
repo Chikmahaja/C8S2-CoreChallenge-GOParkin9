@@ -58,7 +58,7 @@ struct DetailRecordInactive: View {
                 .padding()
                 .frame(maxWidth: .infinity)
                 .foregroundStyle(Color.white)
-                .background(Color.secondary1)
+                .background(Color.blue)
                 .cornerRadius(8)
             }
             

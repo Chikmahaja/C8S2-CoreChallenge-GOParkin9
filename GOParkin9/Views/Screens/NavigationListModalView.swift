@@ -25,9 +25,13 @@ struct NavigationListModalView: View {
     var selectedLocation: Int
     @Binding var isCompassOpen: Bool
     @Binding var isComplete: Bool
+    @Binding var hasTakenRecord: Bool
     @Binding var isPresented: Bool
     
     @State private var sortMode: SortMode = .default
+    
+    @State private var selectedNav: Options? = nil
+    @State private var showCompassFullScreen = false
     
     var navigationOptions: [Options] = [
         Options(id: 1, name: "Entry Gate Basement 1", image: Image("nav-EntryGateB1"), coordinate: CLLocationCoordinate2D(latitude: -6.302254, longitude: 106.652554)),
@@ -81,27 +85,27 @@ struct NavigationListModalView: View {
                     
                     Spacer()
                     
-                    Button("Close") {
+                    Button(action: {
                         isPresented = false
+                    }) {
+                        Image(systemName: "xmark")
+                            .font(.system(size: 14, weight: .bold))
+                            .foregroundColor(.white)
+                            .padding(8)
+                            .background(Color.gray.opacity(0.40))
+                            .clipShape(Circle())
                     }
-                    .foregroundColor(.red)
-                    .font(.callout)
                     
                 }
                 .padding(.horizontal)
-                .padding(.top, 30)
-                .padding(.bottom, -5)
-                .background(Color(UIColor.tertiarySystemGroupedBackground))
+                .padding(.top, 15)
+                .padding(.bottom, 10)
+                .background(Color(UIColor.systemGroupedBackground))
                 
                 List(sortedOptions) { nav in
-                    NavigationLink {
-                        CompassView(
-                            isCompassOpen: $isCompassOpen,
-                            isComplete: $isComplete,
-                            selectedLocation: nav.id,
-                            longitude: nav.coordinate.longitude,
-                            latitude: nav.coordinate.latitude
-                        )
+                    Button {
+                        selectedNav = nav
+                        isCompassOpen = true
                     } label: {
                         HStack(alignment: .top, spacing: 15) {
                             nav.image
@@ -111,26 +115,46 @@ struct NavigationListModalView: View {
                                 .cornerRadius(8)
                                 .clipped()
                             
-                            VStack(alignment: .leading, spacing: 8) {
+                            VStack(alignment: .leading, spacing: 10) {
                                 Text(nav.name)
                                     .font(.body)
                                     .fontWeight(.bold)
                                     .padding(.vertical, 2)
+                                    .foregroundColor(Color.primary)
                                 Text(distanceText(for: nav.coordinate))
                                     .font(.footnote)
-                                    .foregroundColor(.secondary)
+                                    .fontWeight(.bold)
+                                    .foregroundColor(Color.secondary)
                             }
+                            
+                            Spacer()
+                            
+                            Image(systemName: "chevron.right")
+                                .font(.subheadline)
+                                .padding(.vertical, 20)
+                                .foregroundColor(Color.secondary)
                         }
-                        .padding(.vertical, 5)
-                        .padding(.horizontal, -5)
                     }
+                    .padding(.vertical, 5)
+                    .padding(.horizontal, -5)
                 }
             }
             .listStyle(InsetGroupedListStyle())
-            .padding(.top, -18)
-            .padding(.horizontal, -5)
+            .listRowSpacing(5)
+            
+            .fullScreenCover(isPresented: $isCompassOpen) {
+                if let nav = selectedNav {
+                    CompassView(
+                        isCompassOpen: $isCompassOpen,
+                        isComplete: $isComplete,
+                        selectedLocation: nav.id,
+                        longitude: nav.coordinate.longitude,
+                        latitude: nav.coordinate.latitude
+                    )
+                }
+            }
+            .cornerRadius(15)
         }
-        .cornerRadius(15)
     }
 }
 
@@ -139,12 +163,14 @@ struct NavigationListModalView_Previews: PreviewProvider {
         @State var isCompassOpen = false
         @State var isComplete = false
         @State var isPresented = true
+        @State var hasTakenRecord = false
         
         var body: some View {
             NavigationListModalView(
                 selectedLocation: 1,
                 isCompassOpen: $isCompassOpen,
                 isComplete: $isComplete,
+                hasTakenRecord: $hasTakenRecord,
                 isPresented: $isPresented
             )
             .environmentObject(NavigationManager())

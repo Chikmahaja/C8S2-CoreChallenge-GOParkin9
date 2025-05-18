@@ -32,11 +32,12 @@ class CompassViewModel: ObservableObject {
     @Published var displayedAngle: Double = 0
     @Published var isPulsing = false
     
-    @Query(filter: #Predicate<ParkingRecord>{p in p.isHistory == false}) var parkingRecords: [ParkingRecord]
+    //@Query(filter: #Predicate<ParkingRecord>{p in p.isHistory == false}) var parkingRecords: [ParkingRecord]
     
-    var firstParkingRecord: ParkingRecord? {
-        parkingRecords.first
-    }
+//    var firstParkingRecord: ParkingRecord? {
+//        parkingRecords.first
+//    }
+    var firstParkingRecord: ParkingRecord?
     
     @Published var options = [
         Location(id:1, name: "Entry Gate B1", label: "Entry Gate Basement 1", coordinate: CLLocationCoordinate2D(latitude: -6.302254, longitude: 106.652554)),
@@ -139,12 +140,12 @@ class CompassViewModel: ObservableObject {
         }
     }
 
-    func complete(context: ModelContext) {
-        firstParkingRecord?.isHistory = true
-        firstParkingRecord?.completedAt = Date.now
-        try? context.save()
-        print("Complete")
-    }
+//    func complete(context: ModelContext) {
+//        firstParkingRecord?.isHistory = true
+//        firstParkingRecord?.completedAt = Date.now
+//        try? context.save()
+//        print("Complete")
+//    }
     
     init(isSpeechEnabled: Bool = false, isCompassOpen: Bool, isComplete: Bool, selectedLocation: Int, longitude: Double, latitude: Double, previousAngle: Double, displayedAngle: Double, isPulsing: Bool = false, parkingRecords: [ParkingRecord], options: [Location] = [
         Location(id:1, name: "Entry Gate B1", label: "Entry Gate Basement 1", coordinate: CLLocationCoordinate2D(latitude: -6.302254, longitude: 106.652554)),
@@ -152,7 +153,7 @@ class CompassViewModel: ObservableObject {
         Location(id:3, name: "Charging Station", label: "Charging Station", coordinate: CLLocationCoordinate2D(latitude: -6.302097, longitude: 106.652612)),
         Location(id:4, name: "Entry Gate B2", label: "Entry Gate Basement 2", coordinate: CLLocationCoordinate2D(latitude: -6.301891, longitude: 106.652777)),
         Location(id:5, name: "Exit Gate B2", label: "Exit Gate Basement 2", coordinate: CLLocationCoordinate2D(latitude: -6.301597, longitude: 106.652761))
-    ], speechUtteranceManager: SpeechUtteranceManager = SpeechUtteranceManager()) {
+    ], speechUtteranceManager: SpeechUtteranceManager = SpeechUtteranceManager(), firstParkingRecord: ParkingRecord?) {
         self.isSpeechEnabled = isSpeechEnabled
         self.isCompassOpen = isCompassOpen
         self.isComplete = isComplete
@@ -164,6 +165,7 @@ class CompassViewModel: ObservableObject {
         self.isPulsing = isPulsing
         self.options = options
         self.speechUtteranceManager = speechUtteranceManager
+        self.firstParkingRecord = firstParkingRecord
     }
     
 }
@@ -195,7 +197,8 @@ struct CompassView: View {
             latitude: latitude,
             previousAngle: 0.0,
             displayedAngle: 0.0,
-            parkingRecords: []
+            parkingRecords: [],
+            firstParkingRecord: firstParkingRecord
         ))
     }
     
@@ -225,7 +228,7 @@ struct CompassView: View {
                             .resizable()
                             .scaledToFit()
                             .frame(width: 20, height: 20)
-                            .foregroundColor(.secondary1)
+                            .foregroundColor(.blue)
                             .padding(25)
                     }
     
@@ -256,7 +259,7 @@ struct CompassView: View {
                             .resizable()
                             .scaledToFit()
                             .frame(width: 30, height: 30)
-                            .foregroundColor(.secondary1)
+                            .foregroundColor(.blue)
                             .padding(20)
                             .animation(nil, value: compassVM.isSpeechEnabled)
                     }

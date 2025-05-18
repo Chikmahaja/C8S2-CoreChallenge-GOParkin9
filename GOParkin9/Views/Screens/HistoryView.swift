@@ -69,7 +69,7 @@ struct HistoryView: View {
                             .scaledToFit()
                             .frame(width: 20, height: 20)
                             .padding(.trailing, 10)
-                            .foregroundColor(.secondary1)
+                            .foregroundColor(.yellow)
                         
                         
                         Text("Pinned")
@@ -100,7 +100,7 @@ struct HistoryView: View {
                             .scaledToFit()
                             .frame(width: 20, height: 20)
                             .padding(.trailing, 10)
-                            .foregroundColor(.secondary1)
+                            .foregroundColor(Color.gray)
                         
                         
                         Text("All History")
@@ -355,7 +355,7 @@ struct HistoryComponent: View {
                         Label("Pin", systemImage: "pin")
                     }
                 }
-                .tint(.secondary1)
+                .tint(.yellow)
                 
                 Button {
                     deleteItem()
